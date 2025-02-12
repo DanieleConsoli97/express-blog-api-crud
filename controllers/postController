@@ -1,0 +1,25 @@
+const express = require("express")
+
+function index (req,res){
+    res.send('Lista dei post');
+}
+function show (req,res){
+    const postId = req.params.id;
+    res.send(`Dettaglio del post ${postId}`);
+}
+function create (req,res){
+    res.send('Creazione di un nuovo post');
+}
+function update (req,res){
+    const postId = req.params.id;
+    res.send(`Modifica del post ${postId}`);
+}
+function updateid (req,res){
+    const postId = req.params.id;
+    res.send(`Modifica parziale del post ${postId}`)
+}
+function cancel (req,res){
+    const postId = req.params.id;
+    res.send(`Cancellazione del post ${postId}`);
+}
+module.exports = {index, show, create, update, updateid,cancel}
