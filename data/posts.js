@@ -43,5 +43,5 @@ const posts = [
     tags: ["Dolci", "Dolci al cioccolato", "Torte", "Ricette vegetariane", "Ricette al forno"],
   },
 ];
-
+//NOTE - esportiamo il file per utilizzarlo dove serve
 module.exports = posts;

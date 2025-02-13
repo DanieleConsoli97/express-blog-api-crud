@@ -1,25 +1,122 @@
-const express = require("express")
+//NOTE - importiamo il file posts
+const posts = require("../data/posts");
 
-function index (req,res){
-    res.send('Lista dei post');
+function index(req, res) {
+  res.json(posts);
 }
-function show (req,res){
-    const postId = req.params.id;
-    res.send(`Dettaglio del post ${postId}`);
+function show(req, res) {
+  //NOTE -parametro passato dal path esempio http//:localhost:3000/posts/id
+  const postId = parseInt(req.params.id);
+   //NOTE -ricerca del post tramite id inserito precedentemente
+  const post = posts.find((element)=>{ 
+    return element.id===postId
+   })
+ //NOTE -controllo e risposta della ricerca in caso non viene trovato l'oggetto desiderato
+   if(!post){
+   //NOTE -restituiamo lo status corretto 404
+    res.status(404)
+     //NOTE -risposta visializzata sotto forma di file json in questo caso esito negativo della ricerca
+  res.json({
+    status: 404,
+    error: "Not Found",
+    message: "post non trovato"
+    })
 }
-function create (req,res){
-    res.send('Creazione di un nuovo post');
+//NOTE -restituiamo come  risposta  sotto forma di file json l'oggetto trovato
+  res.json(post)
 }
-function update (req,res){
-    const postId = req.params.id;
-    res.send(`Modifica del post ${postId}`);
+
+function create(req, res) {
+  //NOTE -risposta visializzata sotto forma di file json
+  const newId=(posts[posts.length-1].id) + 1
+  const newPost= {
+    id : newId,
+    title : req.body.title,
+    content: req.body.content,
+    image: req.body.image,
+    tags: req.body.tags
+  }
+  posts.push(newPost)
+  console.log(newId)
+  console.log(req.body)
+  res.json(newPost);
+  res.status(201);
+ 
+
+  
 }
-function updateid (req,res){
-    const postId = req.params.id;
-    res.send(`Modifica parziale del post ${postId}`)
+function update(req, res) {
+   //NOTE -parametro passato dal path esempio http//:localhost:3000/posts/id
+  const postId = parseInt(req.params.id);
+  const post = posts.find((element)=>{ 
+    return element.id===postId
+   })
+if(!post){
+  res.status(404)
+  res.json({
+    status: 404,
+    error: "Not Found",
+    message: "post non trovato"
+    })
+  }
+    // post.title = req.body.title;
+    // post.content = req.body.content;
+    // post.image = req.body.image;
+    // post.tags = req.body.tags;
+    // res.json(post);
+    //oppure
+    for (const key in req.body) {
+      post[key] = req.body[key]
+    }
+      
+    res.json(post)
+     //NOTE - res.send(`Modifica parziale del post ${postId}`);
 }
-function cancel (req,res){
-    const postId = req.params.id;
-    res.send(`Cancellazione del post ${postId}`);
+function updatePar(req, res) {
+   //NOTE -parametro passato dal path esempio http//:localhost:3000/posts/id
+  const postId = parseInt(req.params.id);
+  const post = posts.find((element)=>{ 
+    return element.id===postId
+   })
+if(!post){
+  res.status(404)
+  res.json({
+    status: 404,
+    error: "Not Found",
+    message: "post non trovato"
+    })
+  }
+    // post.title = req.body.title;
+    // post.content = req.body.content;
+    // post.image = req.body.image;
+    // post.tags = req.body.tags;
+    // res.json(post);
+    //oppure
+    for (const key in req.body) {
+      post[key] = req.body[key]
+    }
+      
+    res.json(post)
+  //NOTE - res.send(`Modifica parziale del post ${postId}`);
 }
-module.exports = {index, show, create, update, updateid,cancel}
+function cancel(req, res) {
+  //NOTE -parametro passato dal path esempio http//:localhost:3000/posts/id
+  const postId = parseInt(req.params.id);
+  const post = posts.find((element)=>{
+    return element.id===postId
+ })
+if(!post){
+  res.status(404)
+  res.json({
+  status: 404,
+  error: "Not Found",
+  message: "post non trovato"
+  })
+}
+posts.splice(posts.indexOf(post),1)
+console.log(posts)
+res.sendStatus(204)
+
+}
+ //NOTE esportiamo il modulo per usarlo in routers
+module.exports = { index, show, create, update, updatePar, cancel };
